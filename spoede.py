@@ -72,17 +72,66 @@ def fetch_rhymes(word):
 
 
 # If rhymer.com has no entries or fetch_rhymes() otherwise fails to provide,
-# generate a rhyme by chopping off the first syllable of the word and
-# replacing it with a randomly-generated one
+# generate a rhyme by chopping off the first syllable of the word (if there
+# are more than two) and replacing it with a randomly-generated one
+
+double_cons = ['sh', 'ch', 'ph', 'gh', 'll', 'cc', 'mm', 'ss', 'nn']
+cons_blocks = ['b', 'd', 'f', 'g', 'h', 'j', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'z', 'bl', 'br', 'ch', 'cl', 'cr', 'dr', 'fl', 'fr', 'gr', 'pr', 'pl', 'sc', 'sk', 'skl', 'sl', 'st', 'tr', 'vr', 'schl', 'shl']
+vowel_blocks = ['a', 'e', 'i', 'o', 'u', 'y', 'ae', 'ai', 'au', 'ee', 'ey', 'oo', 'ou', 'ui', 'ua', 'ui']
 
 def gen_rhyme(word):
-    return
-    # [...]
+
+    out = word
+    p = 0
+    while out[p] not in vowels:
+        p += 1
+    if count_syll(word) > 2:
+        if out[p+1] in vowels:
+            p += 1
+        if out[p+2] not in vowels:
+            p += 1
+            if out[p:p+2] in double_cons:
+                p += 1
+        out = out[p+1:]
+    
+    else:
+        out = out[p:]
+    
+    prep = random.choice(cons_blocks)
+    if count_syll(word) > 2:
+        prep += random.choice(vowel_blocks)
+        if out[0] in vowels:
+            prep += random.choice(cons_blocks)
+    
+    out = prep + out
+    if out == word:
+        # In the unlikely event that it generates the same word that it received, try again
+        return gen_rhyme(word)
+    
+    return out
 
 
 # Put everything together to generate a complete phrase
 
 def spoede():
     word = get_word()
+    rhymes = fetch_rhymes(word)
+    if len(rhymes) > 1:
+        rhymes.remove(word)
     
-    # [...]
+    rhyme1 = word
+    while rhyme1 == word:
+        if len(rhymes) < 1:
+            rhyme1 = gen_rhyme(word)
+        else:
+            rhyme1 = random.choice(rhymes)
+    
+    rhyme2 = rhyme1
+    while rhyme2 == rhyme1:
+        if len(rhymes) < 2:
+            rhyme2 = gen_rhyme(word)
+        else:
+            rhyme2 = random.choice(rhymes)
+    
+    return f"What is {word} if {rhyme1} is {rhyme2}"
+    
