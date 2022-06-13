@@ -100,7 +100,7 @@ def gen_rhyme(word):
     prep = random.choice(cons_blocks)
     if count_syll(word) > 2:
         prep += random.choice(vowel_blocks)
-        if out[0] in vowels:
+        if out[0] in vowels or random.randint(1,2) == 1:
             prep += random.choice(cons_blocks)
     
     out = prep + out
@@ -115,7 +115,13 @@ def gen_rhyme(word):
 
 def spoede():
     word = get_word()
-    rhymes = fetch_rhymes(word)
+    
+    # fetch_rhymes can throw an exception if urlopen() fails due to internet issues
+    try:
+        rhymes = fetch_rhymes(word)
+    except:
+        rhymes = []
+    
     if len(rhymes) > 1:
         rhymes.remove(word)
     
