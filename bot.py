@@ -11,7 +11,7 @@ client = discord.Client(intents = discord.Intents.default())
 @client.event
 async def on_ready():
     print(f"{client.user} connected")
-    act = discord.CustomActivity("!spoede")
+    act = discord.Activity(type = discord.ActivityType.listening, name = "!spoede")
     await client.change_presence(activity = act)
 
 @client.event
@@ -20,6 +20,9 @@ async def on_message(message):
         return
     
     if message.content == "!spoede":
-        await message.channel.send(spoede.spoede())
+        print(f"Recieved request from {str(message.author)} in channel {str(message.channel)}")
+        out = spoede.spoede()
+        print(f"Responding: {out}")
+        await message.channel.send(out)
 
 client.run(TOKEN)

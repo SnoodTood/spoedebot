@@ -115,14 +115,14 @@ def gen_rhyme(word):
 
 def spoede():
     word = get_word()
-    
+    print(f"Base word is {word}")
     # fetch_rhymes can throw an exception if urlopen() fails due to internet issues
     try:
         rhymes = fetch_rhymes(word)
     except:
         rhymes = []
     
-    if len(rhymes) > 1:
+    if word in rhymes:
         rhymes.remove(word)
     
     rhyme1 = word
