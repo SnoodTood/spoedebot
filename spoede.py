@@ -38,6 +38,8 @@ last = "last-syllable-rhymes/"
 double = "double-rhymes/"
 triple = "triple-rhymes/"
 
+id_nums = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
+
 def fetch_rhymes(word):
     syll = count_syll(word)
     url = "https://www.rhymer.com/"
@@ -55,8 +57,8 @@ def fetch_rhymes(word):
         soup = BeautifulSoup(response, 'html.parser')
     
     # rhymer.com result pages categorize results by syllables inside a <div>
-    # tag with id of e.g. "syl-1" for 1-syllable rhymes
-    target_id = "syl-" + str(syll)
+    # tag with id of e.g. "one" for 1-syllable rhymes
+    target_id = id_nums[syll - 1]
     
     # BeautifulSoup can then be used to search for said tag
     div = soup.find(id = target_id)
